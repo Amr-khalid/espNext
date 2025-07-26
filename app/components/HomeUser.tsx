@@ -6,7 +6,7 @@ import Effect from "./bits/Effect";
 import MainButton from "./ui/MainButton";
 import axios from "axios";
 import { axiosClient } from "../config";
-import Particles from "../Login/Particles";
+import GXY from "./bits/GXY";
 
 // ===== دالة عامة للتعامل مع API =====
 async function handelButto(
@@ -138,29 +138,6 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
     <div className="overflow-hidden ">
-      {
-        <div
-          style={{
-            zIndex: -1,
-            width: "100%",
-            height: "100vh",
-            position: "absolute",
-            overflow: "hidden",
-          }}
-        >
-          <Particles
-            particleColors={["#ffffff", "#ffffff"]}
-            particleCount={900}
-            particleSpread={10}
-            speed={1}
-            particleBaseSize={100}
-            moveParticlesOnHover={true}
-            alphaParticles={false}
-            disableRotation={false}
-          />
-        </div>
-     
-      }
       <div className="flex justify-between w-full">
         <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
           <span className="font-bold text-2xl text-white">
@@ -179,7 +156,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         </button>
       </div>
       <input
-        className=" shadow-2xl w-[90%] m-auto sm:w-[80%] sm:ml-30 shadow-white hover:shadow-md duration-300 rounded-2xl  h-8"
+        className=" shadow-2xl w-[90%] m-auto sm:w-[80%] sm:ml-30 shadow-white/50 hover:shadow-md duration-300 rounded-2xl  h-8"
         type="text"
         placeholder="Enter IP Address"
         onChange={(e) => {
@@ -259,6 +236,8 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
           Report
         </MainButton>
       </div>
+      {screenX<640 ? (null):      <GXY />
+}
     </div>
   );
 }
