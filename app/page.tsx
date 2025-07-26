@@ -1,14 +1,18 @@
 "use client";
-import { Home } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import HomeUser from "./components/HomeUser";
+
 export default function Speedometer() {
+  const [hasToken, setHasToken] = useState(false);
 
-  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        setHasToken(true);
+      }
+    }
+  }, []);
 
-  return (
-    <>
-      {localStorage.getItem("token") ? <HomeUser />:null}
-    </>
-  );
+  return <>{hasToken ? <HomeUser /> : null}</>;
 }
