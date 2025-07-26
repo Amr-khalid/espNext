@@ -139,6 +139,29 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
     <div className="overflow-hidden ">
+      {
+        <div
+          style={{
+            zIndex: -1,
+            width: "100%",
+            height: "100vh",
+            position: "absolute",
+            overflow: "hidden",
+          }}
+        >
+          <Particles
+            particleColors={["#ffffff", "#ffffff"]}
+            particleCount={900}
+            particleSpread={10}
+            speed={1}
+            particleBaseSize={100}
+            moveParticlesOnHover={true}
+            alphaParticles={false}
+            disableRotation={false}
+          />
+        </div>
+     
+      }
       <div className="flex justify-between w-full">
         <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
           <span className="font-bold text-2xl text-white">
@@ -176,8 +199,8 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
       />
       {/* عرض قيمة الغاز */}
       <Effect
-        {...(screenX < 640
-          ? { w: "2rem", h: "3rem" }
+        {...(screenX < 840
+          ? { w: "3rem", h: "3rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
@@ -189,8 +212,8 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
       </Effect>
 
       <Effect
-        {...(screenX < 640
-          ? { w: "2rem", h: "3rem" }
+        {...(screenX < 840
+          ? { w: "3rem", h: "3rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
@@ -237,29 +260,6 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
           Report
         </MainButton>
       </div>
-      {screenX < 640 ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100vh",
-            position: "absolute",
-            overflow: "hidden",
-          }}
-        >
-          <Particles
-            particleColors={["#ffffff", "#ffffff"]}
-            particleCount={900}
-            particleSpread={10}
-            speed={1}
-            particleBaseSize={100}
-            moveParticlesOnHover={true}
-            alphaParticles={false}
-            disableRotation={false}
-          />
-        </div>
-      ) : (
-        <GXY />
-      )}
     </div>
   );
 }
