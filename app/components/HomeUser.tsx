@@ -156,7 +156,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         </button>
       </div>
       <input
-        className=" shadow-2xl w-[80%] ml-30 shadow-white hover:shadow-md duration-300 rounded-2xl  h-8"
+        className=" shadow-2xl w-[80%] sm:ml-30 shadow-white hover:shadow-md duration-300 rounded-2xl  h-8"
         type="text"
         placeholder="Enter IP Address"
         onChange={(e) => {
@@ -176,7 +176,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
       {/* عرض قيمة الغاز */}
       <Effect
         {...(screenX < 640
-          ? { w: "4rem", h: "3rem" }
+          ? { w: "3rem", h: "3rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
@@ -198,7 +198,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         Gas Sensor Reading
       </Effect>
 
-      <div className="flex gap-4 mt-65 p-4 translate-y-10 sm:-translate-0.5 bottom-0 mb-2">
+      <div className="flex gap-4 mt-65 p-4 translate-y-20 z-999 relative h-14 sm:translate-y-8 bottom-0 mb-2">
         <MainButton
           className="w-full shadow-md cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
