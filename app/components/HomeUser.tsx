@@ -6,7 +6,6 @@ import Effect from "./bits/Effect";
 import MainButton from "./ui/MainButton";
 import axios from "axios";
 import { axiosClient } from "../config";
-import GXY from "./bits/GXY";
 import Particles from "../Login/Particles";
 
 // ===== دالة عامة للتعامل مع API =====
