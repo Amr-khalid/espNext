@@ -23,7 +23,7 @@ async function handelButto(
 }
 
 export default function HomeUser() {
-  const idAddrees = "192.168.1.4";
+
 
   const [user, setUser] = useState<{
     username: string;
@@ -42,6 +42,8 @@ export default function HomeUser() {
   const [gasValue, setGasValue] = useState<number | null>(null);
   const [ledState, setLedState] = useState<string>("off");
   const [isDangerSent, setIsDangerSent] = useState(false);
+  const [id_Addrees, setIdAddrees] = useState("192.168.1.200");
+  const idAddrees = id_Addrees;
 
   // ✅ تحسين باستخدام useMemo
   const state = useMemo(
@@ -149,12 +151,23 @@ export default function HomeUser() {
             {user.username || "Guest"}
           </span>
         </h1>
+        <input className=" shadow-2xl shadow-white hover:shadow-md duration-300 rounded-2xl mt-4 w-[60%] h-8" type="text" placeholder="Enter IP Address" onChange={(e) => {setIdAddrees(e.target.value);
+          
+           setTimeout(() => {if(gasValue != null) {
+            toast.success("IP Address updated successfully", {
+              duration: 3000,
+              position: "top-center",
+              style: { background: "#333", color: "#fff", width: "300px" },
+            });
+           }}, 1000);
+          
+        }}/>
         <button
           onClick={() => {
             localStorage.removeItem("token");
             location.reload();
           }}
-          className="rounded-xl text-2xl shadow-md shadow-black duration-500 ring-1 px-2 py-1 ring-green-900/30 hover:shadow-2xl hover:translate-y-1"
+          className="rounded-xl  text-2xl shadow-md shadow-black duration-500 ring-1 px-2 py-1 ring-green-900/30 hover:shadow-2xl hover:translate-y-1"
         >
           Logout
         </button>

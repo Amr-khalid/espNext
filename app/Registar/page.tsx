@@ -4,7 +4,6 @@ import MainButton from "../components/ui/MainButton";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
 import { axiosClient } from "../config";
 import toast from "react-hot-toast";
 
