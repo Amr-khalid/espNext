@@ -176,7 +176,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
       {/* عرض قيمة الغاز */}
       <Effect
         {...(screenX < 640
-          ? { w: "5rem", h: "3rem" }
+          ? { w: "4rem", h: "3rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
@@ -189,7 +189,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
       <Effect
         {...(screenX < 640
-          ? { w: "5rem", h: "3rem" }
+          ? { w: "4rem", h: "3rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
