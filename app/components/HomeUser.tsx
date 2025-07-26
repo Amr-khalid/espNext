@@ -134,33 +134,40 @@ export default function HomeUser() {
      if (timer) clearTimeout(timer); // ✅ تحقق قبل الحذف
    };
  }, [state, isDangerSent, handleEmail]);
+const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
     <div>
       <div className="flex justify-between w-full">
-        <h1 className="text-2xl font-bold text-center text-gray-500 mt-4">
-          welcome back{" "}
+        <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
           <span className="font-bold text-2xl text-white">
             {user.username || "Guest"}
           </span>
         </h1>
-        <input className=" shadow-2xl shadow-white hover:shadow-md duration-300 rounded-2xl mt-4 w-[60%] h-8" type="text" placeholder="Enter IP Address" onChange={(e) => {setIdAddrees(e.target.value);
-          
-           setTimeout(() => {if(gasValue != null) {
-            toast.success("IP Address updated successfully", {
-              duration: 3000,
-              position: "top-center",
-              style: { background: "#333", color: "#fff", width: "300px" },
-            });
-           }}, 1000);
-          
-        }}/>
+        <input
+          className=" shadow-2xl shadow-white hover:shadow-md duration-300 rounded-2xl mt-4 w-[60%] h-8"
+          type="text"
+          placeholder="Enter IP Address"
+          onChange={(e) => {
+            setIdAddrees(e.target.value);
+
+            setTimeout(() => {
+              if (gasValue != null) {
+                toast.success("IP Address updated successfully", {
+                  duration: 3000,
+                  position: "top-center",
+                  style: { background: "#333", color: "#fff", width: "300px" },
+                });
+              }
+            }, 1000);
+          }}
+        />
         <button
           onClick={() => {
             localStorage.removeItem("token");
             location.reload();
           }}
-          className="rounded-xl  text-2xl shadow-md shadow-black duration-500 ring-1 px-2 py-1 ring-green-900/30 hover:shadow-2xl hover:translate-y-1"
+          className="rounded-full bg-black text-white/80 sm:text-2xl shadow-md shadow-black duration-500 ring-1 px-2 py-1 ring-green-900/30 hover:shadow-2xl hover:translate-y-1"
         >
           Logout
         </button>
@@ -168,13 +175,26 @@ export default function HomeUser() {
 
       {/* عرض قيمة الغاز */}
       <Effect
+        {...(screenX < 640
+          ? { w: "4rem", h: "2rem" }
+          : { w: "8rem", h: "6rem" })}
+        enableHover={true}
+        hoverIntensity={0.5}
         className={`translate-y-30 ${
           state === "danger" ? "text-red-600" : "text-green-600"
         }`}
       >
         {gasValue !== null ? `${gasValue} ppm` : "......يتبع"} ({state})
       </Effect>
-      <Effect className="translate-y-30 w-80 sm:w-full">
+
+      <Effect
+        {...(screenX < 640
+          ? { w: "4rem", h: "2rem" }
+          : { w: "8rem", h: "6rem" })}
+        enableHover={true}
+        hoverIntensity={0.5}
+        className="translate-y-30 w-20 sm:w-80"
+      >
         Gas Sensor Reading
       </Effect>
 

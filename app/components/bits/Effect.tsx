@@ -5,12 +5,16 @@ export default function Effect({
   children,
   hoverIntensity,
   enableHover,
-  className
+  className,
+  w,
+  h
 }: {
   children: React.ReactNode;
   hoverIntensity?: number;
   enableHover?: boolean;
-  className?:string
+  className?: string;
+  w?: any;
+  h?: string;
 }) {
   return (
     <div className={className}>
@@ -18,6 +22,7 @@ export default function Effect({
         baseIntensity={0.2}
         hoverIntensity={hoverIntensity}
         enableHover={enableHover}
+        fontSize={`clamp(2rem, ${w}, ${h})`}
       >
         {children}
       </FuzzyText>
