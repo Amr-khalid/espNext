@@ -6,6 +6,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axiosClient } from "../config";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export default function Page() {
   const schema = z.object({
@@ -164,10 +165,11 @@ export default function Page() {
                   </p>
                 )}
               </div>
-
               <MainButton className="col-span-2 w-full rounded-3xl cursor-pointer tracking-widest">
                 <span>Sign Up </span>
-              </MainButton>
+              </MainButton>     
+                         <p className="text-gray-500 dark:text-gray-400">Already have an account?<span className="text-green-900"><Link href="/Login">Login</Link></span></p>
+
             </form>
           </div>
         </div>

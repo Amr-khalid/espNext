@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MainButton from "../components/ui/MainButton";
-import { Link } from "lucide-react";
+import Link  from "next/link";
 
 export default function page() {
   const Schema=z.object({
@@ -37,10 +37,7 @@ export default function page() {
       {errors.password && (
         <p className="text-red-500">{errors.password.message}</p>
       )}
-      <Link href="/register" className="text-blue-500 hover:underline "><button>
-        <p className="text-white">Don't have an account? Register</p>
-    </button>  </Link>
-      
+    <p>Don't have an account? <span className="text-green-500"><Link  href="/Registar">Sign up</Link></span></p>
       <MainButton className="cursor-pointer hover:bg-white/10 tracking-[2px]">Submit</MainButton>
       
     </form>

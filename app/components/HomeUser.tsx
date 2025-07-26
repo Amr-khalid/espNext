@@ -7,6 +7,7 @@ import MainButton from "./ui/MainButton";
 import axios from "axios";
 import { axiosClient } from "../config";
 import GXY from "./bits/GXY";
+import Particles from "../Login/Particles";
 
 // ===== دالة عامة للتعامل مع API =====
 async function handelButto(
@@ -198,7 +199,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         Gas Sensor Reading
       </Effect>
 
-      <div className="flex gap-4 mt-75 p-4  h-18 bottom-0 mb-2">
+      <div className="flex gap-4 mt-130 sm:mt-75 p-4  h-18 bottom-0 mb-2">
         <MainButton
           className="w-full shadow-md cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
@@ -236,7 +237,29 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
           Report
         </MainButton>
       </div>
-      <GXY />
+      {screenX < 640 ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            position: "absolute",
+            overflow: "hidden",
+          }}
+        >
+          <Particles
+            particleColors={["#ffffff", "#ffffff"]}
+            particleCount={900}
+            particleSpread={10}
+            speed={1}
+            particleBaseSize={100}
+            moveParticlesOnHover={true}
+            alphaParticles={false}
+            disableRotation={false}
+          />
+        </div>
+      ) : (
+        <GXY />
+      )}
     </div>
   );
 }
