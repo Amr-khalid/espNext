@@ -144,24 +144,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
             {user.username || "Guest"}
           </span>
         </h1>
-        <input
-          className=" shadow-2xl shadow-white hover:shadow-md duration-300 rounded-2xl mt-4 w-[60%] h-8"
-          type="text"
-          placeholder="Enter IP Address"
-          onChange={(e) => {
-            setIdAddrees(e.target.value);
 
-            setTimeout(() => {
-              if (gasValue != null) {
-                toast.success("IP Address updated successfully", {
-                  duration: 3000,
-                  position: "top-center",
-                  style: { background: "#333", color: "#fff", width: "300px" },
-                });
-              }
-            }, 1000);
-          }}
-        />
         <button
           onClick={() => {
             localStorage.removeItem("token");
@@ -172,7 +155,24 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
           Logout
         </button>
       </div>
+      <input
+        className=" shadow-2xl w-[80%] ml-30 shadow-white hover:shadow-md duration-300 rounded-2xl  h-8"
+        type="text"
+        placeholder="Enter IP Address"
+        onChange={(e) => {
+          setIdAddrees(e.target.value);
 
+          setTimeout(() => {
+            if (gasValue != null) {
+              toast.success("IP Address updated successfully", {
+                duration: 3000,
+                position: "top-center",
+                style: { background: "#333", color: "#fff", width: "300px" },
+              });
+            }
+          }, 1000);
+        }}
+      />
       {/* عرض قيمة الغاز */}
       <Effect
         {...(screenX < 640
@@ -198,7 +198,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         Gas Sensor Reading
       </Effect>
 
-      <div className="flex gap-4 mt-65 p-4 relative bottom-0 mb-2">
+      <div className="flex gap-4 mt-65 p-4 translate-y-10 sm:-translate-0.5 bottom-0 mb-2">
         <MainButton
           className="w-full shadow-md cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
