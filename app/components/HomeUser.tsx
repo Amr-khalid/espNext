@@ -107,40 +107,33 @@ export default function HomeUser() {
   }, [fetchStatus]);
 
   // ===== مراقبة الحالة الخطرة =====
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
+ useEffect(() => {
+   let timer: NodeJS.Timeout | null = null;
 
-    if (state === "danger" && !isDangerSent) {
-      timer = setTimeout(async () => {
-        try {
-          setIsDangerSent(true); // منع الإرسال المتكرر
-          await axios.post("http://localhost:7000/call", {
-            phone: "+201024556910",
-          });
-          await handleEmail();
+   if (state === "danger" && !isDangerSent) {
+     timer = setTimeout(async () => {
+       setIsDangerSent(true);
+       await axios.post("https://esp32express-production.up.railway.app/call", {
+         phone: "+201024556910",
+       });
+       await handleEmail();
+       toast.error("⚠️ Gas level is high! Please take action.", {
+         duration: 5000,
+         position: "bottom-center",
+         style: { background: "red", color: "white", width: "400px" },
+       });
+     }, 2000);
+   }
 
-          toast.error("⚠️ Gas level is high! Please take action.", {
-            duration: 5000,
-            position: "bottom-center",
-            style: { background: "red", color: "white", width: "400px" },
-          });
-        } catch (err) {
-          console.error("Call API Error:", err);
-          toast.error("❌ Failed to send alert call!", {
-            duration: 3000,
-            position: "top-center",
-          });
-        }
-      }, 2000);
-    }
+   if (state === "normal") {
+     setIsDangerSent(false);
+     if (timer) clearTimeout(timer); // ✅ تحقق أولًا
+   }
 
-    if (state === "normal") {
-      setIsDangerSent(false);
-      clearTimeout(timer); // إعادة السماح عند عودة الوضع الطبيعي
-    }
-
-    return () => clearTimeout(timer); // تنظيف عند تحديث أو إلغاء الـ Effect
-  }, [state, isDangerSent, handleEmail]);
+   return () => {
+     if (timer) clearTimeout(timer); // ✅ تحقق قبل الحذف
+   };
+ }, [state, isDangerSent, handleEmail]);
 
   return (
     <div>
