@@ -137,7 +137,7 @@ export default function HomeUser() {
 const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
-    <div>
+    <div className="overflow-hidden ">
       <div className="flex justify-between w-full">
         <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
           <span className="font-bold text-2xl text-white">
@@ -176,7 +176,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
       {/* عرض قيمة الغاز */}
       <Effect
         {...(screenX < 640
-          ? { w: "4rem", h: "2rem" }
+          ? { w: "5rem", h: "3rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
@@ -189,7 +189,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
       <Effect
         {...(screenX < 640
-          ? { w: "4rem", h: "2rem" }
+          ? { w: "5rem", h: "3rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
@@ -198,7 +198,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         Gas Sensor Reading
       </Effect>
 
-      <div className="flex gap-4 mt-65 p-4">
+      <div className="flex gap-4 mt-65 p-4 relative bottom-0 mb-2">
         <MainButton
           className="w-full shadow-md cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
