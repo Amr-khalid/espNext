@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import HomeUser from "./components/HomeUser";
+import Page from "./Registar/page";
 
 export default function Speedometer() {
   const [hasToken, setHasToken] = useState(false);
@@ -14,5 +15,5 @@ export default function Speedometer() {
     }
   }, []);
 
-  return <>{hasToken ? <HomeUser /> : null}</>;
+  return <>{hasToken ? <HomeUser /> : <Page/>}</>;
 }
