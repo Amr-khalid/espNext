@@ -193,7 +193,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
-        className="translate-y-30 w-20 sm:w-80"
+        className="translate-y-30 w-24 sm:w-80"
       >
         Gas Sensor Reading
       </Effect>
