@@ -44,7 +44,9 @@ export default function HomeUser() {
   const [gasValue, setGasValue] = useState<number | null>(null);
   const [ledState, setLedState] = useState<string>("off");
   const [isDangerSent, setIsDangerSent] = useState(false);
-  const [id_Addrees, setIdAddrees] = useState("192.168.1.200");
+  const [id_Addrees, setIdAddrees] = useState(
+    "https://dad773c0a325.ngrok-free.app"
+  );
   const idAddrees = id_Addrees;
 
   // ✅ تحسين باستخدام useMemo
@@ -56,15 +58,17 @@ export default function HomeUser() {
   // ✅ fetchStatus محسّن بـ useCallback
   const fetchStatus = useCallback(async () => {
     try {
-      const res = await axios.get(`http://${idAddrees}/status`);
+      const res = await axios.get(`${idAddrees}/status`);
       console.log(res.data);
 
       setGasValue(res.data.gas_value);
+      console.log(res.data.gas_value);
+      
       setLedState(res.data.led);
     } catch (err) {
       console.error("Error:", err);
     }
-  }, [idAddrees]);
+  }, [gasValue]);
 
   // ✅ handleEmail محسّن بـ useCallback
   const handleEmail = useCallback(async () => {
@@ -183,7 +187,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
       <input
         className=" outline-0 shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] sm:ml-30 shadow-white/50 hover:shadow-md duration-300 rounded-2xl  h-8"
         type="text"
-        placeholder="Enter IP Address"
+        placeholder="ENTER YOUR CONNECTION ID"
         onChange={(e) => {
           setIdAddrees(e.target.value);
 
@@ -227,7 +231,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         <MainButton
           className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
-            handelButto(`http://${idAddrees}/led/on`, "post").then(fetchStatus);
+            handelButto(`${idAddrees}/led/on`, "post").then(fetchStatus);
             toast.success("LED is ON", {
               duration: 3000,
               position: "top-center",
@@ -241,7 +245,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         <MainButton
           className="w-full shadow-md flex justify-center cursor-pointer shadow-red-600/30 bg-red-600/10 duration-500 hover:translate-y-1"
           onClick={() => {
-            handelButto(`http://${idAddrees}/led/off`, "post").then(
+            handelButto(`${idAddrees}/led/off`, "post").then(
               fetchStatus
             );
             toast.success("LED is OFF", {
