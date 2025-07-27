@@ -12,4 +12,15 @@ const nextConfig = {
   swcMinify: true,
 };
 
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://xxxx.ngrok-free.app/:path*", // رابط ngrok
+      },
+    ];
+  },
+};
+
 export default withPWA(nextConfig);

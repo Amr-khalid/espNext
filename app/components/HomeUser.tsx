@@ -25,8 +25,6 @@ async function handelButto(
 }
 
 export default function HomeUser() {
-
-
   const [user, setUser] = useState<{
     username: string;
     email: string;
@@ -56,19 +54,51 @@ export default function HomeUser() {
   );
 
   // ✅ fetchStatus محسّن بـ useCallback
+
+//     const response = await axios.get(
+//       "https://36fbcf7ba765.ngrok-free.app/status"
+      
+//     );
+//     res.json(response.data); // ✅ إرجاع البيانات فقط
+//   } catch (err) {
+//     console.error("❌ ESP Error:", err.message);
+//     res.status(500).json({ error: "فشل الاتصال بـ ESP32" });
+//   }
+// });
   const fetchStatus = useCallback(async () => {
     try {
-      const res = await axios.get(`${idAddrees}/status`);
+      const res = await axios.get(
+        `https://esp32express-production.up.railway.app/?url=${idAddrees}/status`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "any", // ✅ لتجاوز صفحة ngrok
+          },
+        }
+      );
+
       console.log(res.data);
 
       setGasValue(res.data.gas_value);
-      console.log(res.data.gas_value);
-      
       setLedState(res.data.led);
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error:");
     }
-  }, [gasValue]);
+  }, []); // ✅ نعتمد فقط على عنوان الـ ESP32
+console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
+
+  // const fetchStatus = useCallback(async () => {
+  //   try {
+  //     const res = await axios.get(`${idAddrees}/status`,{headers: {"ngrok-skip-browser-warning": "any"} });
+  //     console.log(res.data);
+
+  //     setGasValue(res.data.gas_value);
+  //     console.log(res.data);
+
+  //     setLedState(res.data.led);
+  //   } catch (err) {
+  //     console.error("Error:", err);
+  //   }
+  // }, [gasValue]);
 
   // ✅ handleEmail محسّن بـ useCallback
   const handleEmail = useCallback(async () => {
@@ -113,34 +143,37 @@ export default function HomeUser() {
   }, [fetchStatus]);
 
   // ===== مراقبة الحالة الخطرة =====
- useEffect(() => {
-   let timer: NodeJS.Timeout | null = null;
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
 
-   if (state === "danger" && !isDangerSent) {
-     timer = setTimeout(async () => {
-       setIsDangerSent(true);
-       await axios.post("https://esp32express-production.up.railway.app/call", {
-         phone: "+201024556910",
-       });
-       await handleEmail();
-       toast.error("⚠️ Gas level is high! Please take action.", {
-         duration: 5000,
-         position: "bottom-center",
-         style: { background: "red", color: "white", width: "400px" },
-       });
-     }, 2000);
-   }
+    if (state === "danger" && !isDangerSent) {
+      timer = setTimeout(async () => {
+        setIsDangerSent(true);
+        await axios.post(
+          "https://esp32express-production.up.railway.app/call",
+          {
+            phone: "+201024556910",
+          }
+        );
+        await handleEmail();
+        toast.error("⚠️ Gas level is high! Please take action.", {
+          duration: 5000,
+          position: "bottom-center",
+          style: { background: "red", color: "white", width: "400px" },
+        });
+      }, 2000);
+    }
 
-   if (state === "normal") {
-     setIsDangerSent(false);
-     if (timer) clearTimeout(timer); // ✅ تحقق أولًا
-   }
+    if (state === "normal") {
+      setIsDangerSent(false);
+      if (timer) clearTimeout(timer); // ✅ تحقق أولًا
+    }
 
-   return () => {
-     if (timer) clearTimeout(timer); // ✅ تحقق قبل الحذف
-   };
- }, [state, isDangerSent, handleEmail]);
-const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
+    return () => {
+      if (timer) clearTimeout(timer); // ✅ تحقق قبل الحذف
+    };
+  }, [state, isDangerSent, handleEmail]);
+  const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
     <div className="overflow-hidden ">
@@ -205,11 +238,11 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
       {/* عرض قيمة الغاز */}
       <Effect
         {...(screenX < 840
-          ? { w: "3rem", h: "4rem" }
+          ? { w: "2rem", h: "4rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
-        className={`translate-y-30 ${
+        className={`translate-y-30 mr-4 w-24 sm:w-80 ${
           state === "danger" ? "text-red-600" : "text-green-600"
         }`}
       >
@@ -218,11 +251,11 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
       <Effect
         {...(screenX < 840
-          ? { w: "3rem", h: "4rem" }
+          ? { w: "2rem", h: "4rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
-        className="translate-y-30 w-24 sm:w-80"
+        className="translate-y-30 mr-4 w-24 sm:w-80"
       >
         Gas Sensor Reading
       </Effect>
@@ -231,7 +264,10 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         <MainButton
           className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
-            handelButto(`${idAddrees}/led/on`, "post").then(fetchStatus);
+            handelButto(
+              `https://esp32express-production.up.railway.app/on?url=${idAddrees}`,
+              "post"
+            ).then(fetchStatus);
             toast.success("LED is ON", {
               duration: 3000,
               position: "top-center",
@@ -245,9 +281,10 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
         <MainButton
           className="w-full shadow-md flex justify-center cursor-pointer shadow-red-600/30 bg-red-600/10 duration-500 hover:translate-y-1"
           onClick={() => {
-            handelButto(`${idAddrees}/led/off`, "post").then(
-              fetchStatus
-            );
+            handelButto(
+              `https://esp32express-production.up.railway.app/off?url=${idAddrees}`,
+              "post"
+            ).then(fetchStatus);
             toast.success("LED is OFF", {
               duration: 3000,
               position: "bottom-center",
@@ -262,7 +299,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
           className="w-fullb flex justify-center shadow-md cursor-pointer shadow-green-600/30 bg-black-600/10 duration-500 hover:translate-y-1"
           onClick={handleEmail}
         >
-         <Mail/>
+          <Mail />
         </MainButton>
       </div>
     </div>
