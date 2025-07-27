@@ -7,6 +7,8 @@ import MainButton from "./ui/MainButton";
 import axios from "axios";
 import { axiosClient } from "../config";
 import Particles from "../Login/Particles";
+import Link from "next/link";
+import { LogOut, Power ,PowerOff,Mail} from "lucide-react"; // Assuming you might use icons later
 
 // ===== دالة عامة للتعامل مع API =====
 async function handelButto(
@@ -138,24 +140,35 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
     <div className="overflow-hidden ">
-            <div style={{ width: "100%", height: "100vh", position: "absolute",overflow:"hidden", zIndex: -1 }}>
-          <Particles
-            particleColors={["#ffffff", "#ffffff"]}
-            particleCount={900}
-            particleSpread={10}
-            speed={1}
-            particleBaseSize={100}
-            moveParticlesOnHover={true}
-            alphaParticles={false}
-            disableRotation={false}
-          />
-        </div>
-      <div className="flex justify-between w-full">
-        <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
-          <span className="font-bold text-2xl text-white">
-            {user.username || "Guest"}
-          </span>
-        </h1>
+      <div
+        style={{
+          width: "100%",
+          height: "100vh",
+          position: "absolute",
+          overflow: "hidden",
+          zIndex: -1,
+        }}
+      >
+        <Particles
+          particleColors={["#ffffff", "#ffffff"]}
+          particleCount={900}
+          particleSpread={10}
+          speed={1}
+          particleBaseSize={100}
+          moveParticlesOnHover={true}
+          alphaParticles={false}
+          disableRotation={false}
+        />
+      </div>
+      <div className="flex justify-between w-full backdrop-blur-3xl">
+        <Link href={"/profile"}>
+          {" "}
+          <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
+            <span className="font-bold text-2xl text-white">
+              {user.username || "Guest"}
+            </span>
+          </h1>
+        </Link>
 
         <button
           onClick={() => {
@@ -164,11 +177,11 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
           }}
           className="rounded-full bg-black text-white/80 sm:text-2xl shadow-md shadow-black duration-500 ring-1 px-2 py-1 ring-green-900/30 hover:shadow-2xl hover:translate-y-1"
         >
-          Logout
+          <LogOut />
         </button>
       </div>
       <input
-        className=" shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] sm:ml-30 shadow-white/50 hover:shadow-md duration-300 rounded-2xl  h-8"
+        className=" outline-0 shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] sm:ml-30 shadow-white/50 hover:shadow-md duration-300 rounded-2xl  h-8"
         type="text"
         placeholder="Enter IP Address"
         onChange={(e) => {
@@ -212,7 +225,7 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
       <div className="flex gap-4 mt-130 sm:mt-75 p-4  h-18 bottom-0 mb-2">
         <MainButton
-          className="w-full shadow-md cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
+          className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
             handelButto(`http://${idAddrees}/led/on`, "post").then(fetchStatus);
             toast.success("LED is ON", {
@@ -222,11 +235,11 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
             });
           }}
         >
-          ON
+          <Power />
         </MainButton>
 
         <MainButton
-          className="w-full shadow-md cursor-pointer shadow-red-600/30 bg-red-600/10 duration-500 hover:translate-y-1"
+          className="w-full shadow-md flex justify-center cursor-pointer shadow-red-600/30 bg-red-600/10 duration-500 hover:translate-y-1"
           onClick={() => {
             handelButto(`http://${idAddrees}/led/off`, "post").then(
               fetchStatus
@@ -238,17 +251,16 @@ const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
             });
           }}
         >
-          OFF
+          <PowerOff />
         </MainButton>
 
         <MainButton
-          className="w-full shadow-md cursor-pointer shadow-green-600/30 bg-black-600/10 duration-500 hover:translate-y-1"
+          className="w-fullb flex justify-center shadow-md cursor-pointer shadow-green-600/30 bg-black-600/10 duration-500 hover:translate-y-1"
           onClick={handleEmail}
         >
-          Report
+         <Mail/>
         </MainButton>
       </div>
-   
     </div>
   );
 }
