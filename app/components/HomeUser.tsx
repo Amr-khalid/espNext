@@ -78,6 +78,11 @@ export default function HomeUser() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const storedUrl = localStorage.getItem("esp_url");
+
+    if (storedUrl) {
+      setIdAddress(storedUrl); // ✅ استرجاع العنوان المحفوظ
+    }
     if (!token) {
       toast.error("You are not logged in");
       setTimeout(() => (window.location.href = "/Registar"), 1000);
@@ -172,8 +177,11 @@ export default function HomeUser() {
         className="outline-0 shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] shadow-white/50 hover:shadow-md duration-300 rounded-2xl h-8"
         type="text"
         placeholder="ENTER YOUR CONNECTION ID"
+        value={idAddress} // ✅ ربط القيمة بالحالة
         onChange={(e) => {
-          setIdAddress(e.target.value);
+          const newAddress = e.target.value;
+          setIdAddress(newAddress);
+          localStorage.setItem("esp_url", newAddress); // ✅ حفظ في localStorage
           setTimeout(() => {
             toast.success("IP Address updated successfully", {
               duration: 3000,
@@ -209,7 +217,7 @@ export default function HomeUser() {
         Gas Sensor Reading
       </Effect>
 
-      <div className="flex gap-4 mt-110 sm:mt-80 p-4 h-18 bottom-0 mb-2">
+      <div className="flex gap-4 mt-117 sm:mt-80 p-4 h-18 bottom-0 mb-2">
         <MainButton
           aria-label="Turn On LED"
           className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
