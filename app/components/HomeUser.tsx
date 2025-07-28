@@ -209,7 +209,7 @@ export default function HomeUser() {
         Gas Sensor Reading
       </Effect>
 
-      <div className="flex gap-4 mt-95 sm:mt-55 p-4 h-18 bottom-0 mb-2">
+      <div className="flex gap-4 mt-110 sm:mt-80 p-4 h-18 bottom-0 mb-2">
         <MainButton
           aria-label="Turn On LED"
           className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
