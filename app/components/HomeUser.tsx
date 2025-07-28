@@ -8,10 +8,12 @@ import axios from "axios";
 import { axiosClient } from "../config";
 import Particles from "../Login/Particles";
 import Link from "next/link";
-import { LogOut, Power ,PowerOff,Mail} from "lucide-react"; // Assuming you might use icons later
+import { LogOut, Power, PowerOff, Mail } from "lucide-react";
 
-// ===== دالة عامة للتعامل مع API =====
-async function handelButto(
+const BACKEND_URL = "https://esp32express-production.up.railway.app";
+
+// ✅ دالة عامة للتعامل مع API
+async function handleButton(
   url: string,
   type: "post" | "get" | "delete" | "put"
 ) {
@@ -25,13 +27,7 @@ async function handelButto(
 }
 
 export default function HomeUser() {
-  const [user, setUser] = useState<{
-    username: string;
-    email: string;
-    address: string;
-    phone: string;
-    temp: number;
-  }>({
+  const [user, setUser] = useState({
     username: "Guest",
     email: "",
     address: "",
@@ -42,65 +38,26 @@ export default function HomeUser() {
   const [gasValue, setGasValue] = useState<number | null>(null);
   const [ledState, setLedState] = useState<string>("off");
   const [isDangerSent, setIsDangerSent] = useState(false);
-  const [id_Addrees, setIdAddrees] = useState(
+  const [idAddress, setIdAddress] = useState(
     "https://dad773c0a325.ngrok-free.app"
   );
-  const idAddrees = id_Addrees;
 
-  // ✅ تحسين باستخدام useMemo
   const state = useMemo(
-    () => (gasValue !== null && gasValue > 700 ? "danger" : "normal"),
+    () => (gasValue !== null && gasValue > 400 ? "danger" : "normal"),
     [gasValue]
   );
 
-  // ✅ fetchStatus محسّن بـ useCallback
-
-//     const response = await axios.get(
-//       "https://36fbcf7ba765.ngrok-free.app/status"
-      
-//     );
-//     res.json(response.data); // ✅ إرجاع البيانات فقط
-//   } catch (err) {
-//     console.error("❌ ESP Error:", err.message);
-//     res.status(500).json({ error: "فشل الاتصال بـ ESP32" });
-//   }
-// });
   const fetchStatus = useCallback(async () => {
     try {
-      const res = await axios.get(
-        `https://esp32express-production.up.railway.app/?url=${idAddrees}/status`,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "any", // ✅ لتجاوز صفحة ngrok
-          },
-        }
-      );
-
+      const res = await axios.get(`${BACKEND_URL}/?url=${idAddress}`);
       console.log(res.data);
-
       setGasValue(res.data.gas_value);
       setLedState(res.data.led);
     } catch (err) {
-      console.error("Error:");
+      console.error("Error:", err);
     }
-  }, []); // ✅ نعتمد فقط على عنوان الـ ESP32
-console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
+  }, [idAddress]);
 
-  // const fetchStatus = useCallback(async () => {
-  //   try {
-  //     const res = await axios.get(`${idAddrees}/status`,{headers: {"ngrok-skip-browser-warning": "any"} });
-  //     console.log(res.data);
-
-  //     setGasValue(res.data.gas_value);
-  //     console.log(res.data);
-
-  //     setLedState(res.data.led);
-  //   } catch (err) {
-  //     console.error("Error:", err);
-  //   }
-  // }, [gasValue]);
-
-  // ✅ handleEmail محسّن بـ useCallback
   const handleEmail = useCallback(async () => {
     try {
       await axiosClient.post("/email", {
@@ -112,18 +69,13 @@ console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
       toast.success("Email sent successfully", {
         duration: 3000,
         position: "top-center",
-        style: {
-          background: "black",
-          color: "green",
-          width: "400px",
-        },
+        style: { background: "black", color: "green", width: "400px" },
       });
     } catch (err) {
       console.error("Email Error:", err);
     }
   }, [user]);
 
-  // ===== عند تحميل الصفحة =====
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -138,23 +90,19 @@ console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
     }
 
     fetchStatus();
-    const interval = setInterval(fetchStatus, 500); // تحديث كل نصف ثانية
+    const interval = setInterval(fetchStatus, 500);
     return () => clearInterval(interval);
   }, [fetchStatus]);
 
-  // ===== مراقبة الحالة الخطرة =====
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
     if (state === "danger" && !isDangerSent) {
       timer = setTimeout(async () => {
         setIsDangerSent(true);
-        await axios.post(
-          "https://esp32express-production.up.railway.app/call",
-          {
-            phone: "+201024556910",
-          }
-        );
+        await axios.post(`${BACKEND_URL}/call`, {
+          phone: "+201024556910",
+        });
         await handleEmail();
         toast.error("⚠️ Gas level is high! Please take action.", {
           duration: 5000,
@@ -166,17 +114,18 @@ console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
 
     if (state === "normal") {
       setIsDangerSent(false);
-      if (timer) clearTimeout(timer); // ✅ تحقق أولًا
+      if (timer) clearTimeout(timer);
     }
 
     return () => {
-      if (timer) clearTimeout(timer); // ✅ تحقق قبل الحذف
+      if (timer) clearTimeout(timer);
     };
   }, [state, isDangerSent, handleEmail]);
+
   const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
-    <div className="overflow-hidden ">
+    <div className="overflow-hidden">
       <div
         style={{
           width: "100%",
@@ -197,17 +146,18 @@ console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
           disableRotation={false}
         />
       </div>
+
       <div className="flex justify-between w-full backdrop-blur-3xl">
         <Link href={"/profile"}>
-          {" "}
           <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
             <span className="font-bold text-2xl text-white">
-              {user.username || "Guest"}
+              {user?.username ?? "Guest"}
             </span>
           </h1>
         </Link>
 
         <button
+          aria-label="Logout"
           onClick={() => {
             localStorage.removeItem("token");
             location.reload();
@@ -217,25 +167,24 @@ console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
           <LogOut />
         </button>
       </div>
+
       <input
-        className=" outline-0 shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] sm:ml-30 shadow-white/50 hover:shadow-md duration-300 rounded-2xl  h-8"
+        className="outline-0 shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] shadow-white/50 hover:shadow-md duration-300 rounded-2xl h-8"
         type="text"
         placeholder="ENTER YOUR CONNECTION ID"
         onChange={(e) => {
-          setIdAddrees(e.target.value);
-
+          setIdAddress(e.target.value);
           setTimeout(() => {
-            if (gasValue != null) {
-              toast.success("IP Address updated successfully", {
-                duration: 3000,
-                position: "top-center",
-                style: { background: "#333", color: "#fff", width: "300px" },
-              });
-            }
+            toast.success("IP Address updated successfully", {
+              duration: 3000,
+              position: "top-center",
+              style: { background: "#333", color: "#fff", width: "300px" },
+            });
+            fetchStatus();
           }, 1000);
         }}
       />
-      {/* عرض قيمة الغاز */}
+
       <Effect
         {...(screenX < 840
           ? { w: "2rem", h: "4rem" }
@@ -260,14 +209,14 @@ console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
         Gas Sensor Reading
       </Effect>
 
-      <div className="flex gap-4 mt-130 sm:mt-75 p-4  h-18 bottom-0 mb-2">
+      <div className="flex gap-4 mt-95 sm:mt-55 p-4 h-18 bottom-0 mb-2">
         <MainButton
+          aria-label="Turn On LED"
           className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
-            handelButto(
-              `https://esp32express-production.up.railway.app/on?url=${idAddrees}`,
-              "post"
-            ).then(fetchStatus);
+            handleButton(`${BACKEND_URL}/on?url=${idAddress}`, "post").then(
+              fetchStatus
+            );
             toast.success("LED is ON", {
               duration: 3000,
               position: "top-center",
@@ -279,12 +228,12 @@ console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
         </MainButton>
 
         <MainButton
+          aria-label="Turn Off LED"
           className="w-full shadow-md flex justify-center cursor-pointer shadow-red-600/30 bg-red-600/10 duration-500 hover:translate-y-1"
           onClick={() => {
-            handelButto(
-              `https://esp32express-production.up.railway.app/off?url=${idAddrees}`,
-              "post"
-            ).then(fetchStatus);
+            handleButton(`${BACKEND_URL}/off?url=${idAddress}`, "post").then(
+              fetchStatus
+            );
             toast.success("LED is OFF", {
               duration: 3000,
               position: "bottom-center",
@@ -296,7 +245,8 @@ console.log(`Gas Value: ${gasValue}, LED State: ${ledState}, State: ${state}`);
         </MainButton>
 
         <MainButton
-          className="w-fullb flex justify-center shadow-md cursor-pointer shadow-green-600/30 bg-black-600/10 duration-500 hover:translate-y-1"
+          aria-label="Send Email"
+          className="w-full flex justify-center shadow-md cursor-pointer shadow-green-600/30 bg-black-600/10 duration-500 hover:translate-y-1"
           onClick={handleEmail}
         >
           <Mail />
