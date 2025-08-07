@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
 import Effect from "./bits/Effect";
@@ -9,6 +8,7 @@ import { axiosClient } from "../config";
 import Particles from "../Login/Particles";
 import Link from "next/link";
 import { LogOut, Power, PowerOff, Mail } from "lucide-react";
+import LightRays from "./bits/LightRays";
 
 const BACKEND_URL = "https://esp32express-production.up.railway.app";
 
@@ -130,18 +130,22 @@ export default function HomeUser() {
   const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden ">
       <div
         style={{
-          width: "100%",
+          width: "100vw",
           height: "100vh",
           position: "absolute",
           overflow: "hidden",
           zIndex: -1,
+          background: `linear-gradient(360deg, ${
+            !isDangerSent ? "rgba(231, 33, 33, 0.2)" : "rgba(0, 255, 255, 0.2)"
+          } 0%, #000 100%)`,
+          // filter: isDangerSent ? "contrast(1)" : "contrast(.7)",
         }}
       >
-        <Particles
-          particleColors={["#ffffff", "#ffffff"]}
+        {/* <Particles
+          particleColors={["#B72121", "#B72121"]}
           particleCount={900}
           particleSpread={10}
           speed={1}
@@ -149,10 +153,22 @@ export default function HomeUser() {
           moveParticlesOnHover={true}
           alphaParticles={false}
           disableRotation={false}
+        /> */}
+        <LightRays
+          raysOrigin="top-center"
+          raysColor={!isDangerSent ? "#E72121" : "#00ffff"}
+          raysSpeed={2.5}
+          lightSpread={0.8}
+          rayLength={3}
+          followMouse={true}
+          mouseInfluence={0.1}
+          noiseAmount={0.1}
+          distortion={0.05}
+          className="custom-rays"
         />
       </div>
 
-      <div className="flex justify-between w-full backdrop-blur-3xl">
+      <div className="flex justify-between w-full gap-4 ">
         <Link href={"/profile"}>
           <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
             <span className="font-bold text-2xl text-white">
@@ -160,6 +176,28 @@ export default function HomeUser() {
             </span>
           </h1>
         </Link>
+
+        <input
+          className="outline-0 text-[12px] text-center sm:text-[20px] shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] shadow-white/50 hover:shadow-md duration-300 rounded-2xl h-8"
+          type="text"
+          placeholder="ENTER YOUR CONNECTION ID"
+          value={idAddress} // ✅ ربط القيمة بالحالة
+          onChange={(e) => {
+            const newAddress = e.target.value;
+            setIdAddress(
+              JSON.stringify(localStorage.setItem("esp_url", newAddress))
+            ); // ✅ حفظ في الحالة
+            localStorage.setItem("esp_url", newAddress); // ✅ حفظ في localStorage
+            setTimeout(() => {
+              toast.success("IP Address updated successfully", {
+                duration: 3000,
+                position: "top-center",
+                style: { background: "#333", color: "#fff", width: "300px" },
+              });
+              fetchStatus();
+            }, 3000);
+          }}
+        />
 
         <button
           aria-label="Logout"
@@ -173,33 +211,13 @@ export default function HomeUser() {
         </button>
       </div>
 
-      <input
-        className="outline-0 shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] shadow-white/50 hover:shadow-md duration-300 rounded-2xl h-8"
-        type="text"
-        placeholder="ENTER YOUR CONNECTION ID"
-        value={idAddress} // ✅ ربط القيمة بالحالة
-        onChange={(e) => {
-          const newAddress = e.target.value;
-          setIdAddress(newAddress);
-          localStorage.setItem("esp_url", newAddress); // ✅ حفظ في localStorage
-          setTimeout(() => {
-            toast.success("IP Address updated successfully", {
-              duration: 3000,
-              position: "top-center",
-              style: { background: "#333", color: "#fff", width: "300px" },
-            });
-            fetchStatus();
-          }, 1000);
-        }}
-      />
-
       <Effect
         {...(screenX < 840
-          ? { w: "2rem", h: "4rem" }
+          ? { w: "2.5rem", h: "7rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
-        className={`translate-y-30 mr-4 w-24 sm:w-80 ${
+        className={`translate-y-45 sm:translate-x-45 mr-4 w-24 sm:w-80 ${
           state === "danger" ? "text-red-600" : "text-green-600"
         }`}
       >
@@ -208,19 +226,19 @@ export default function HomeUser() {
 
       <Effect
         {...(screenX < 840
-          ? { w: "2rem", h: "4rem" }
+          ? { w: "2.5rem", h: "4rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
-        className="translate-y-30 mr-4 w-24 sm:w-80"
+        className="translate-y-50 -translate-x-10 sm:translate-x-55 mr-4 w-24 sm:w-80"
       >
         Gas Sensor Reading
       </Effect>
 
-      <div className="flex gap-4 mt-117 sm:mt-80 p-4 h-18 bottom-0 mb-2">
+      <div className="flex gap-4 mt-[118%] sm:mt-[25%] p-4 h-18 bottom-0 mb-2">
         <MainButton
           aria-label="Turn On LED"
-          className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/30 bg-blue-600/10 font-bold duration-500 hover:translate-y-1"
+          className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/50 bg-blue-600/20 font-bold duration-500 hover:translate-y-1"
           onClick={() => {
             handleButton(`${BACKEND_URL}/on?url=${idAddress}`, "post").then(
               fetchStatus
@@ -237,7 +255,7 @@ export default function HomeUser() {
 
         <MainButton
           aria-label="Turn Off LED"
-          className="w-full shadow-md flex justify-center cursor-pointer shadow-red-600/30 bg-red-600/10 duration-500 hover:translate-y-1"
+          className="w-full shadow-md flex justify-center cursor-pointer shadow-red-600/50 bg-red-600/20 duration-500 hover:translate-y-1"
           onClick={() => {
             handleButton(`${BACKEND_URL}/off?url=${idAddress}`, "post").then(
               fetchStatus
@@ -254,7 +272,7 @@ export default function HomeUser() {
 
         <MainButton
           aria-label="Send Email"
-          className="w-full flex justify-center shadow-md cursor-pointer shadow-green-600/30 bg-black-600/10 duration-500 hover:translate-y-1"
+          className="w-full flex justify-center shadow-md cursor-pointer shadow-green-600/50 bg-black-600/20 duration-500 hover:translate-y-1"
           onClick={handleEmail}
         >
           <Mail />

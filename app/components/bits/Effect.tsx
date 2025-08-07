@@ -23,6 +23,7 @@ export default function Effect({
         hoverIntensity={hoverIntensity}
         enableHover={enableHover}
         fontSize={`clamp(2rem, ${w}, ${h})`}
+      
       >
         {children}
       </FuzzyText>
