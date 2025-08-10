@@ -9,7 +9,8 @@ import Particles from "../Login/Particles";
 import Link from "next/link";
 import { LogOut, Power, PowerOff, Mail } from "lucide-react";
 import LightRays from "./bits/LightRays";
-
+import { motion } from "motion/react";
+import Motion from "./ui/Motion";
 const BACKEND_URL = "https://esp32express-production.up.railway.app";
 
 // ✅ دالة عامة للتعامل مع API
@@ -38,13 +39,14 @@ export default function HomeUser() {
   const [gasValue, setGasValue] = useState<number | null>(null);
   const [ledState, setLedState] = useState<string>("off");
   const [isDangerSent, setIsDangerSent] = useState(false);
+  const [fire_detected, setFireDetected] = useState(false);
   const [idAddress, setIdAddress] = useState(
     "https://dad773c0a325.ngrok-free.app"
   );
 
   const state = useMemo(
-    () => (gasValue !== null && gasValue > 400 ? "danger" : "normal"),
-    [gasValue]
+    () => (gasValue !== null && gasValue > 400 || fire_detected ? "danger" : "normal"),
+    [gasValue, fire_detected]
   );
 
   const fetchStatus = useCallback(async () => {
@@ -52,6 +54,7 @@ export default function HomeUser() {
       const res = await axios.get(`${BACKEND_URL}/?url=${idAddress}`);
       console.log(res.data);
       setGasValue(res.data.gas_value);
+      setFireDetected(res.data.fire_detected);
       setLedState(res.data.led);
     } catch (err) {
       console.error("Error:", err);
@@ -130,7 +133,7 @@ export default function HomeUser() {
   const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
-    <div className="overflow-hidden ">
+    <motion.div initial={{ opacity: 0 }} transition={{ duration: 1 }} whileInView={{ opacity: 1 }} className="overflow-hidden ">
       <div
         style={{
           width: "100vw",
@@ -139,7 +142,7 @@ export default function HomeUser() {
           overflow: "hidden",
           zIndex: -1,
           background: `linear-gradient(360deg, ${
-            !isDangerSent ? "rgba(231, 33, 33, 0.2)" : "rgba(0, 255, 255, 0.2)"
+            isDangerSent ? "rgba(231, 33, 33, 0.2)" : "rgba(0, 255, 255, 0.2)"
           } 0%, #000 100%)`,
           // filter: isDangerSent ? "contrast(1)" : "contrast(.7)",
         }}
@@ -156,22 +159,22 @@ export default function HomeUser() {
         /> */}
         <LightRays
           raysOrigin="top-center"
-          raysColor={!isDangerSent ? "#E72121" : "#00ffff"}
+          raysColor={isDangerSent ? "#E72121" : "#00ffff"}
           raysSpeed={2.5}
           lightSpread={0.8}
           rayLength={3}
           followMouse={true}
-          mouseInfluence={0.1}
+          mouseInfluence={0.5}
           noiseAmount={0.1}
           distortion={0.05}
           className="custom-rays"
         />
       </div>
 
-      <div className="flex justify-between w-full gap-4 ">
+      <motion.div initial={{ opacity: .4,translateY:-20,scale:.5 }} transition={{ duration: 1 }} whileInView={{ opacity: 1,translateY:1.5,scale:1 }} className="flex justify-between items-center w-full gap-4 ">
         <Link href={"/profile"}>
           <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
-            <span className="font-bold text-2xl text-white">
+            <span className="font-bold text-[12px] sm:text-2xl text-white">
               {user?.username ?? "Guest"}
             </span>
           </h1>
@@ -205,36 +208,43 @@ export default function HomeUser() {
             localStorage.removeItem("token");
             location.reload();
           }}
-          className="rounded-full bg-black text-white/80 sm:text-2xl shadow-md shadow-black duration-500 ring-1 px-2 py-1 ring-green-900/30 hover:shadow-2xl hover:translate-y-1"
+          className="rounded-full  text-white/80 sm:text-2xl shadow-md shadow-black duration-500 ring-1 px-2  ring-green-900/30 hover:shadow-2xl hover:translate-y-1"
         >
           <LogOut />
         </button>
-      </div>
-
+      </motion.div>
+<Motion>
       <Effect
         {...(screenX < 840
-          ? { w: "2.5rem", h: "7rem" }
+          ? { w: "2.4rem", h: "7rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
-        className={`translate-y-45 sm:translate-x-45 mr-4 w-24 sm:w-80 ${
+        fontFamily="cursive"
+        color="rgb(255,255,255,0.7)"
+        fontWeight={500}
+        className={`translate-y-45 sm:translate-x-60 font-serif mr-4 w-24 sm:w-80 ${
           state === "danger" ? "text-red-600" : "text-green-600"
         }`}
       >
         {gasValue !== null ? `${gasValue} ppm` : "......يتبع"} ({state})
       </Effect>
-
+</Motion>
+<Motion>
       <Effect
         {...(screenX < 840
-          ? { w: "2.5rem", h: "4rem" }
+          ? { w: "2.3rem", h: "4rem" }
           : { w: "8rem", h: "6rem" })}
         enableHover={true}
         hoverIntensity={0.5}
-        className="translate-y-50 -translate-x-10 sm:translate-x-55 mr-4 w-24 sm:w-80"
+        fontFamily="cursive"
+        fontWeight={500}
+        color="rgb(255,255,255,0.7)"
+        className="translate-y-50 -translate-x-10 font-sans  sm:translate-x-55 mr-4 w-24 sm:w-80"
       >
         Gas Sensor Reading
       </Effect>
-
+</Motion>
       <div className="flex gap-4 mt-[118%] sm:mt-[25%] p-4 h-18 bottom-0 mb-2">
         <MainButton
           aria-label="Turn On LED"
@@ -278,6 +288,6 @@ export default function HomeUser() {
           <Mail />
         </MainButton>
       </div>
-    </div>
+    </motion.div>
   );
 }

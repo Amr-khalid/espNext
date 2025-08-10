@@ -7,7 +7,10 @@ export default function Effect({
   enableHover,
   className,
   w,
-  h
+  h,
+  fontFamily,
+  fontWeight,
+  color
 }: {
   children: React.ReactNode;
   hoverIntensity?: number;
@@ -15,6 +18,9 @@ export default function Effect({
   className?: string;
   w?: any;
   h?: string;
+  fontFamily?: "auto"|"serif"|"sans-serif"|"monospace"|"cursive"|"fantasy"|"<custom>";
+  fontWeight?: number;
+  color?: string;
 }) {
   return (
     <div className={className}>
@@ -22,6 +28,9 @@ export default function Effect({
         baseIntensity={0.2}
         hoverIntensity={hoverIntensity}
         enableHover={enableHover}
+        fontFamily={fontFamily}
+        fontWeight={fontWeight}
+        color={color}
         fontSize={`clamp(2rem, ${w}, ${h})`}
       
       >

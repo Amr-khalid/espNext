@@ -16,7 +16,7 @@ export default function Page() {
     password: z.string().min(6, "Password must be at least 6 characters"),
     address: z
       .string()
-      .min(6, "adress must be at least 6 characters"),
+      .min(20, "adress must be at least 20 characters"),
   });
 
   const {
@@ -140,7 +140,7 @@ export default function Page() {
                   className={style}
                   {...register("address")}
                   type="text"
-                  placeholder="Enter your address"
+                  placeholder="Enter your address plase Link your location"
                 />
                 {errors.address && (
                   <p className="text-red-500 text-sm">
@@ -166,7 +166,7 @@ export default function Page() {
                 )}
               </div>
               <MainButton className="col-span-2 w-full rounded-3xl cursor-pointer tracking-widest">
-                <span>Sign Up </span>
+                Sign Up 
               </MainButton>     
                          <p className="text-gray-500 dark:text-gray-400">Already have an account?<span className="text-green-900"><Link href="/Login">Login</Link></span></p>
 
