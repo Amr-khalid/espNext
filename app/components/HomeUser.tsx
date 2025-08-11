@@ -7,12 +7,18 @@ import axios from "axios";
 import { axiosClient } from "../config";
 import Particles from "../Login/Particles";
 import Link from "next/link";
-import { LogOut, Power, PowerOff, Mail } from "lucide-react";
+import { LogOut, Power, PowerOff, Mail, Atom } from "lucide-react";
 import LightRays from "./bits/LightRays";
 import { motion } from "motion/react";
 import Motion from "./ui/Motion";
+import {BlinkBlur, LifeLine,LifeLineProps} from"react-loading-indicators"
 const BACKEND_URL = "https://esp32express-production.up.railway.app";
+import GaugeComponents from "react-gauge-component";
+//or
+import {GaugeComponent} from "react-gauge-component";
+import Valus from "./ui/Valus";
 
+//Component with default values
 // ✅ دالة عامة للتعامل مع API
 async function handleButton(
   url: string,
@@ -133,7 +139,12 @@ export default function HomeUser() {
   const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
-    <motion.div initial={{ opacity: 0 }} transition={{ duration: 1 }} whileInView={{ opacity: 1 }} className="overflow-hidden ">
+    <motion.div
+      initial={{ opacity: 0 }}
+      transition={{ duration: 1 }}
+      whileInView={{ opacity: 1 }}
+      className="overflow-hidden "
+    >
       <div
         style={{
           width: "100vw",
@@ -171,7 +182,12 @@ export default function HomeUser() {
         />
       </div>
 
-      <motion.div initial={{ opacity: .4,translateY:-20,scale:.5 }} transition={{ duration: 1 }} whileInView={{ opacity: 1,translateY:1.5,scale:1 }} className="flex justify-between items-center w-full gap-4 ">
+      <motion.div
+        initial={{ opacity: 0.4, translateY: -20, scale: 0.5 }}
+        transition={{ duration: 1 }}
+        whileInView={{ opacity: 1, translateY: 1.5, scale: 1 }}
+        className="flex justify-between items-center w-full gap-4 "
+      >
         <Link href={"/profile"}>
           <h1 className="text-lg sm:text-2xl font-bold text-center text-gray-500 mt-4">
             <span className="font-bold text-[12px] sm:text-2xl text-white">
@@ -179,7 +195,6 @@ export default function HomeUser() {
             </span>
           </h1>
         </Link>
-
         <input
           className="outline-0 text-[12px] text-center sm:text-[20px] shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] shadow-white/50 hover:shadow-md duration-300 rounded-2xl h-8"
           type="text"
@@ -201,7 +216,6 @@ export default function HomeUser() {
             }, 3000);
           }}
         />
-
         <button
           aria-label="Logout"
           onClick={() => {
@@ -213,39 +227,47 @@ export default function HomeUser() {
           <LogOut />
         </button>
       </motion.div>
-<Motion>
-      <Effect
-        {...(screenX < 840
-          ? { w: "2.4rem", h: "7rem" }
-          : { w: "8rem", h: "6rem" })}
-        enableHover={true}
-        hoverIntensity={0.5}
-        fontFamily="cursive"
-        color="rgb(255,255,255,0.7)"
-        fontWeight={500}
-        className={`translate-y-45 sm:translate-x-60 font-serif mr-4 w-24 sm:w-80 ${
-          state === "danger" ? "text-red-600" : "text-green-600"
-        }`}
-      >
-        {gasValue !== null ? `${gasValue} ppm` : "......يتبع"} ({state})
-      </Effect>
-</Motion>
-<Motion>
-      <Effect
-        {...(screenX < 840
-          ? { w: "2.3rem", h: "4rem" }
-          : { w: "8rem", h: "6rem" })}
-        enableHover={true}
-        hoverIntensity={0.5}
-        fontFamily="cursive"
-        fontWeight={500}
-        color="rgb(255,255,255,0.7)"
-        className="translate-y-50 -translate-x-10 font-sans  sm:translate-x-55 mr-4 w-24 sm:w-80"
-      >
-        Gas Sensor Reading
-      </Effect>
-</Motion>
-      <div className="flex gap-4 mt-[118%] sm:mt-[25%] p-4 h-18 bottom-0 mb-2">
+      <Motion className="z-1000 fixed top-[35%] right-[4%]">
+        <div
+          className={` ${
+            state === "danger" ? "text-red-600" : "text-green-600"
+          }`}
+        >
+          {gasValue == null ? (
+
+             <div className="relative left-1/6  w-4  h-4 mb-20 sm:text-[4rem] text-[1.7rem] flex text-white/70 font-serif ">
+               <p className=" font-semibold">{gasValue || 999}</p>
+               <p className=" font-semibold mx-2"> ppm </p>
+               <p className=" font-semibold mx-5 capitalize">({state})</p>
+             </div>
+          ) : (
+            <div className="relative left-1/6 w-4 h-4 mb-4">
+              <BlinkBlur
+                color="rgb(193,188,188,0.6)"
+                size="medium"
+                text=""
+                textColor=""
+              />{" "}
+            </div>
+          )}
+        </div>
+      </Motion>
+      <Motion className="z-10000 fixed top-[50%] right-[6%]">
+        <Effect
+          {...(screenX < 840
+            ? { w: "20%", h: "4rem" }
+            : { w: "8rem", h: "6rem" })}
+          enableHover={true}
+          hoverIntensity={0.5}
+          fontFamily="cursive"
+          fontWeight={500}
+          color="rgb(255,255,255,0.7)"
+          className=" bottom-0 font-sans z-999 relative sm:translate-x-55 mr-4 w-24 sm:w-80"
+        >
+          Gas Sensor Reading
+        </Effect>
+      </Motion>
+      <div className="flex gap-4 bottom-0 fixed w-full   p-4 h-10 mb-2">
         <MainButton
           aria-label="Turn On LED"
           className="w-full shadow-md text-center flex justify-center cursor-pointer shadow-blue-600/50 bg-blue-600/20 font-bold duration-500 hover:translate-y-1"
