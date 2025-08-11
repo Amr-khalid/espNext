@@ -11,12 +11,8 @@ import { LogOut, Power, PowerOff, Mail, Atom } from "lucide-react";
 import LightRays from "./bits/LightRays";
 import { motion } from "motion/react";
 import Motion from "./ui/Motion";
-import {BlinkBlur, LifeLine,LifeLineProps} from"react-loading-indicators"
+import {BlinkBlur} from"react-loading-indicators"
 const BACKEND_URL = "https://esp32express-production.up.railway.app";
-import GaugeComponents from "react-gauge-component";
-//or
-import {GaugeComponent} from "react-gauge-component";
-import Valus from "./ui/Valus";
 
 //Component with default values
 // ✅ دالة عامة للتعامل مع API
@@ -136,7 +132,6 @@ export default function HomeUser() {
     };
   }, [state, isDangerSent, handleEmail]);
 
-  const screenX = typeof window !== "undefined" ? window.innerWidth : 1024;
 
   return (
     <motion.div
@@ -155,7 +150,6 @@ export default function HomeUser() {
           background: `linear-gradient(360deg, ${
             isDangerSent ? "rgba(231, 33, 33, 0.2)" : "rgba(0, 255, 255, 0.2)"
           } 0%, #000 100%)`,
-          // filter: isDangerSent ? "contrast(1)" : "contrast(.7)",
         }}
       >
         {/* <Particles
@@ -228,18 +222,19 @@ export default function HomeUser() {
         </button>
       </motion.div>
       <Motion className="z-1000 fixed top-[35%] right-[4%]">
-        <div
-          className={` ${
-            state === "danger" ? "text-red-600" : "text-green-600"
-          }`}
-        >
+        <div>
           {gasValue !== null ? (
-
-             <div className="relative left-1/6  w-4  h-4 mb-20 sm:text-[4rem] text-[1.7rem] flex text-white/70 font-serif ">
-               <p className=" font-semibold">{gasValue || 999}</p>
-               <p className=" font-semibold mx-2"> ppm </p>
-               <p className=" font-semibold mx-5 capitalize">({state})</p>
-             </div>
+            <div className="relative text-gray-200/80  left-1/6  w-4  h-4 mb-20 sm:text-[4rem] text-[1.7rem] flex c font-serif ">
+              <p className=" font-auto">{gasValue || 999}</p>
+              <p className=" font-auto mx-2"> ppm </p>
+              <p
+                className={`font-semibold mx-5 capitalize ${
+                  state === "danger" ? "text-red-600" : "text-[#00ffff] opacity-50 contrast-200"
+                }`}
+              >
+                ({state})
+              </p>
+            </div>
           ) : (
             <div className="relative left-1/6 w-4 h-4 mb-4">
               <BlinkBlur
@@ -253,12 +248,19 @@ export default function HomeUser() {
         </div>
       </Motion>
       <Motion className="z-10000 fixed top-[50%] right-[6%]">
-        <p
-          
-          className=" bottom-0  graw font-sans text-[2.5rem] left-1/8 sm:left-0 sm:text-8xl z-999 relative sm:translate-x-55  "
-        >
-          Gas Sensor Reading
-        </p>
+        {gasValue !== null ? (
+          <p className=" bottom-0  graw font-sans text-[2.5rem] left-1/8 sm:left-0 sm:text-8xl z-999 relative sm:translate-x-55  ">
+            Gas Sensor Reading
+          </p>
+        ) : (
+          <div className="relative left-1/6 w-8 h-8 mb-4">
+            <BlinkBlur
+              color="rgb(193,188,188,0.5)"
+              style={{ fontSize: "1.6rem", fontWeight: "bold" }}
+              size="large"
+            />{" "}
+          </div>
+        )}
       </Motion>
       <div className="flex gap-4 bottom-0 fixed w-full   p-4 h-10 mb-2">
         <MainButton

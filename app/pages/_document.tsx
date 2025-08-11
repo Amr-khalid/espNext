@@ -5,7 +5,7 @@ export default function Document() {
     <Html lang="en">
       <Head>
         {/* رابط manifest */}
-        <link rel="manifest" href="/manifest.json" />
+        {/* <link rel="manifest" href="/manifest.json" /> */}
         {/* أيقونة التطبيق */}
         <link rel="apple-touch-icon" href="/next.svg" />
         {/* اللون الأساسي للتطبيق */}

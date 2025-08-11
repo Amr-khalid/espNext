@@ -121,9 +121,8 @@
 }
 .graw {
   background: linear-gradient(90deg,rgb(0, 0, 0),rgb(68, 68, 67),rgb(155, 155, 155),rgb(178, 179, 179),rgb(194, 194, 195),white);
-  background-clip: text;
+  /* background-clip: text; */
   -webkit-background-clip: text; /* لدعم كروم وسفاري */
-  -webkit-text-fill-color: transparent;
   color: transparent;
   font-family: auto;
   animation: loop 4s linear infinite;
