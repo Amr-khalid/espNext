@@ -233,7 +233,7 @@ export default function HomeUser() {
             state === "danger" ? "text-red-600" : "text-green-600"
           }`}
         >
-          {gasValue == null ? (
+          {gasValue !== null ? (
 
              <div className="relative left-1/6  w-4  h-4 mb-20 sm:text-[4rem] text-[1.7rem] flex text-white/70 font-serif ">
                <p className=" font-semibold">{gasValue || 999}</p>
@@ -253,19 +253,12 @@ export default function HomeUser() {
         </div>
       </Motion>
       <Motion className="z-10000 fixed top-[50%] right-[6%]">
-        <Effect
-          {...(screenX < 840
-            ? { w: "20%", h: "4rem" }
-            : { w: "8rem", h: "6rem" })}
-          enableHover={true}
-          hoverIntensity={0.5}
-          fontFamily="cursive"
-          fontWeight={500}
-          color="rgb(255,255,255,0.7)"
-          className=" bottom-0 font-sans z-999 relative sm:translate-x-55 mr-4 w-24 sm:w-80"
+        <p
+          
+          className=" bottom-0  graw font-sans text-[2.5rem] left-1/8 sm:left-0 sm:text-8xl z-999 relative sm:translate-x-55  "
         >
           Gas Sensor Reading
-        </Effect>
+        </p>
       </Motion>
       <div className="flex gap-4 bottom-0 fixed w-full   p-4 h-10 mb-2">
         <MainButton

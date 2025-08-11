@@ -119,4 +119,29 @@
     @apply bg-background text-foreground;
   }
 }
-input{background-color: transparent ! important;}
+.graw {
+  background: linear-gradient(90deg,rgb(0, 0, 0),rgb(68, 68, 67),rgb(155, 155, 155),rgb(178, 179, 179),rgb(194, 194, 195),white);
+  background-clip: text;
+  -webkit-background-clip: text; /* لدعم كروم وسفاري */
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-family: auto;
+  animation: loop 4s linear infinite;
+  background-size: 200% auto; /* مضاعفة العرض ليتحرك التدرج */
+}
+
+@keyframes loop {
+  0% {
+    opacity: .5;
+    background-position: 0% center;
+  }
+  100% {
+    opacity: 1;
+    background-position: 200% center;
+  }
+}
+
+
+input {
+  background-color: transparent !important;
+}
