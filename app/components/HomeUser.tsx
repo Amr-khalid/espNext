@@ -7,11 +7,12 @@ import axios from "axios";
 import { axiosClient } from "../config";
 import Particles from "../Login/Particles";
 import Link from "next/link";
-import { LogOut, Power, PowerOff, Mail, Atom } from "lucide-react";
+import { LogOut, Power, PowerOff, Mail, Atom, Bluetooth } from "lucide-react";
 import LightRays from "./bits/LightRays";
 import { motion } from "motion/react";
 import Motion from "./ui/Motion";
 import {BlinkBlur} from"react-loading-indicators"
+import Blutoth from "./Blutoth";
 const BACKEND_URL = "https://esp32express-production.up.railway.app";
 
 //Component with default values
@@ -47,7 +48,7 @@ export default function HomeUser() {
   );
 
   const state = useMemo(
-    () => (gasValue !== null && gasValue > 400 || fire_detected ? "danger" : "normal"),
+    () => (gasValue !== null && gasValue > 500 || fire_detected ? "danger" : "normal"),
     [gasValue, fire_detected]
   );
 
@@ -55,9 +56,10 @@ export default function HomeUser() {
     try {
       const res = await axios.get(`${BACKEND_URL}/?url=${idAddress}`);
       console.log(res.data);
-      setGasValue(res.data.gas_value);
-      setFireDetected(res.data.fire_detected);
+      setGasValue(res.data.gas);
+      setFireDetected(res.data.fireDetected);
       setLedState(res.data.led);
+      
     } catch (err) {
       console.error("Error:", err);
     }
@@ -189,6 +191,7 @@ export default function HomeUser() {
             </span>
           </h1>
         </Link>
+        
         <input
           className="outline-0 text-[12px] text-center sm:text-[20px] shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] shadow-white/50 hover:shadow-md duration-300 rounded-2xl h-8"
           type="text"
@@ -221,15 +224,17 @@ export default function HomeUser() {
           <LogOut />
         </button>
       </motion.div>
-      <Motion className="z-1000 fixed top-[35%] right-[4%]">
+      <Motion className="z-900 fixed top-[35%] right-[4%]">
         <div>
           {gasValue !== null ? (
-            <div className="relative text-gray-200/80  left-1/6  w-4  h-4 mb-20 sm:text-[4rem] text-[1.7rem] flex c font-serif ">
-              <p className=" font-auto">{gasValue || 999}</p>
-              <p className=" font-auto mx-2"> ppm </p>
+            <div className="relative text-gray-200/80 sm:top-0 left-1/6  w-4  h-4 mb-20 sm:text-[4rem] text-[2rem] font-black flex  ">
+              <p className=" font-semibold">{gasValue }</p>
+              <p className=" font-semibold mx-2"> ppm </p>
               <p
                 className={`font-semibold mx-5 capitalize ${
-                  state === "danger" ? "text-red-600" : "text-[#00ffff] opacity-50 contrast-200"
+                  state === "danger"
+                    ? "text-red-600"
+                    : "text-[#209a9a69] opacity-50 contrast-200"
                 }`}
               >
                 ({state})
@@ -247,7 +252,7 @@ export default function HomeUser() {
           )}
         </div>
       </Motion>
-      <Motion className="z-10000 fixed top-[50%] right-[6%]">
+      <Motion className="z-1000 fixed top-[50%] right-[6%]">
         {gasValue !== null ? (
           <p className=" bottom-0  graw font-sans text-[2.5rem] left-1/8 sm:left-0 sm:text-8xl z-999 relative sm:translate-x-55  ">
             Gas Sensor Reading
@@ -261,7 +266,8 @@ export default function HomeUser() {
             />{" "}
           </div>
         )}
-      </Motion>
+      </Motion>      
+
       <div className="flex gap-4 bottom-0 fixed w-full   p-4 h-10 mb-2">
         <MainButton
           aria-label="Turn On LED"

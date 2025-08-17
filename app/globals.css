@@ -143,4 +143,7 @@
 
 input {
   background-color: transparent !important;
+}.vert{
+  filter:invert(1)
+  
 }
