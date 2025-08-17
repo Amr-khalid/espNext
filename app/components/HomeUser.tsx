@@ -109,7 +109,7 @@ export default function HomeUser() {
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
-    if (state === "danger" && !isDangerSent) {
+    if (state === "danger" && !isDangerSent || fire_detected) {
       timer = setTimeout(async () => {
         setIsDangerSent(true);
         await axios.post(`${BACKEND_URL}/call`, {
