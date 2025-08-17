@@ -42,22 +42,25 @@ export default function HomeUser() {
   const [gasValue, setGasValue] = useState<number | null>(null);
   const [ledState, setLedState] = useState<string>("off");
   const [isDangerSent, setIsDangerSent] = useState(false);
-  const [fire_detected, setFireDetected] = useState(false);
+  const [flame, setFlame] = useState<number | null>(null);
   const [idAddress, setIdAddress] = useState(
     "https://dad773c0a325.ngrok-free.app"
   );
 
-  const state = useMemo(
-    () => (gasValue !== null && gasValue > 500 || fire_detected ? "danger" : "normal"),
-    [gasValue, fire_detected]
-  );
+const state = useMemo(() => {
+  if ((gasValue != null && gasValue > 500) || (flame != null && flame > 500)) {
+    return "danger";
+  }
+  return "normal";
+}, [gasValue, flame]);
+
 
   const fetchStatus = useCallback(async () => {
     try {
       const res = await axios.get(`${BACKEND_URL}/?url=${idAddress}`);
       console.log(res.data);
       setGasValue(res.data.gas);
-      setFireDetected(res.data.fireDetected);
+      setFlame(res.data.flame);
       setLedState(res.data.led);
       
     } catch (err) {
@@ -109,9 +112,10 @@ export default function HomeUser() {
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
-    if (state === "danger" && !isDangerSent || fire_detected) {
-      timer = setTimeout(async () => {
-        setIsDangerSent(true);
+    if ((state === "danger" && !isDangerSent) || (state === "danger" ) ) {
+      
+       setTimeout(async () => {
+        
         await axios.post(`${BACKEND_URL}/call`, {
           phone: "+201024556910",
         });
@@ -121,6 +125,7 @@ export default function HomeUser() {
           position: "bottom-center",
           style: { background: "red", color: "white", width: "400px" },
         });
+        //  setIsDangerSent(true);
       }, 2000);
     }
 
@@ -132,7 +137,7 @@ export default function HomeUser() {
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [state, isDangerSent, handleEmail]);
+  }, [state, isDangerSent, handleEmail, flame]);
 
 
   return (
@@ -150,7 +155,10 @@ export default function HomeUser() {
           overflow: "hidden",
           zIndex: -1,
           background: `linear-gradient(360deg, ${
-            isDangerSent ? "rgba(231, 33, 33, 0.2)" : "rgba(0, 255, 255, 0.2)"
+            (gasValue != null && gasValue > 500) ||
+            (flame != null && flame > 500)
+              ? "rgba(231, 33, 33, 0.2)"
+              : "rgba(0, 255, 255, 0.2)"
           } 0%, #000 100%)`,
         }}
       >
@@ -166,7 +174,12 @@ export default function HomeUser() {
         /> */}
         <LightRays
           raysOrigin="top-center"
-          raysColor={isDangerSent ? "#E72121" : "#00ffff"}
+          raysColor={
+            (gasValue != null && gasValue > 500) ||
+            (flame != null && flame > 500)
+              ? "#E72121"
+              : "#00ffff"
+          }
           raysSpeed={2.5}
           lightSpread={0.8}
           rayLength={3}
@@ -191,7 +204,7 @@ export default function HomeUser() {
             </span>
           </h1>
         </Link>
-        
+
         <input
           className="outline-0 text-[12px] text-center sm:text-[20px] shadow-2xl w-[100%] mt-4 m-auto sm:w-[80%] shadow-white/50 hover:shadow-md duration-300 rounded-2xl h-8"
           type="text"
@@ -228,7 +241,7 @@ export default function HomeUser() {
         <div>
           {gasValue !== null ? (
             <div className="relative text-gray-200/80 sm:top-0 left-1/6  w-4  h-4 mb-20 sm:text-[4rem] text-[2rem] font-black flex  ">
-              <p className=" font-semibold">{gasValue }</p>
+              <p className=" font-semibold">{gasValue}</p>
               <p className=" font-semibold mx-2"> ppm </p>
               <p
                 className={`font-semibold mx-5 capitalize ${
@@ -266,7 +279,7 @@ export default function HomeUser() {
             />{" "}
           </div>
         )}
-      </Motion>      
+      </Motion>
 
       <div className="flex gap-4 bottom-0 fixed w-full   p-4 h-10 mb-2">
         <MainButton
